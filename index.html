@@ -132,6 +132,35 @@
       animation: newtonRightBall 1.4s ease-in-out infinite;
     }
 </style>
+
+  <style id="cinematic-luxury-upgrade">
+    /* ==== Cinematic Luxury Upgrade (Nov 2026) ==== */
+    html, body { overflow-x: hidden; }
+    * { min-width: 0; }
+    img, svg, video, canvas { max-width: 100%; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body::before { content:""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background:
+        radial-gradient(900px 480px at 85% -5%, rgba(217,119,6,0.10), transparent 60%),
+        radial-gradient(760px 480px at 8% 108%, rgba(30,64,175,0.10), transparent 62%); }
+    button { transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, filter .2s ease, background-color .2s ease, border-color .2s ease; }
+    button:hover { filter: brightness(1.07); }
+    button:active { transform: scale(.96); }
+    :focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
+    .glass-panel { box-shadow: 0 24px 60px -32px rgba(0,0,0,.9); transition: border-color .25s ease, box-shadow .3s ease; }
+    .glass-panel:hover { border-color: rgba(251,191,36,.38) !important; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #0b1120; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#b45309,#78350f); border-radius: 8px; border: 2px solid #0b1120; }
+    /* Cinematic hero: richer real photography + film-grade gradient */
+    #cust-hero-banner { box-shadow: 0 40px 90px -40px rgba(245,158,11,.30), 0 30px 60px -30px rgba(0,0,0,.9) !important; border-color: rgba(251,191,36,.35) !important; }
+    #cust-hero-banner::before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+      background: linear-gradient(to top, rgba(2,6,23,0.88) 0%, rgba(2,6,23,0.25) 45%, rgba(2,6,23,0.35) 100%); }
+    #cust-hero-banner > .relative { z-index: 2; }
+    #cust-cover-img { opacity: .6 !important; filter: saturate(1.15) contrast(1.05); transform: scale(1.02); }
+    #cust-view-title { background: linear-gradient(135deg,#fff8e1 0%,#fde68a 35%,#f59e0b 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 3px 14px rgba(0,0,0,.8)); }
+    @media (prefers-reduced-motion: reduce) { button, .glass-panel { transition: none !important; } }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
 
@@ -3778,7 +3807,7 @@
       ar: {
         announcement: "🔥 خصم 20% لفترة محدودة على جميع الوجبات العائلية | كود: CRASH20 🔥",
         status_open: "مفتوح للطلبات",
-        status_cloud: "سحابي متصل ✓",
+        status_cloud: "تخزين محلي سريع ⚡",
         btn_nav_menu: "قائمة الطعام",
         btn_nav_pos: "الكاشير ونقاط البيع",
         btn_nav_kds: "المطبخ والشيف",
@@ -3811,7 +3840,7 @@
       en: {
         announcement: "🔥 20% OFF Limited Time on All Family Meals | Code: CRASH20 🔥",
         status_open: "Open for Orders",
-        status_cloud: "Cloud Connected ✓",
+        status_cloud: "Fast Local Mode ⚡",
         btn_nav_menu: "Menu",
         btn_nav_pos: "Cashier POS",
         btn_nav_kds: "Kitchen KDS",
@@ -4384,6 +4413,10 @@ function renderAuditLogs() {
         if (!response.ok) throw new Error('Cloud fetch error');
         const cloudData = await response.json();
 
+        // A real server read succeeded: only now is it honest to show "cloud connected".
+        const liveBadge = document.getElementById('hdr-cloud-badge');
+        if (liveBadge) liveBadge.innerHTML = '<span>☁️</span> <span>' + (document.documentElement.lang === 'en' ? 'Cloud Connected ✓' : 'سحابي متصل ✓') + '</span>';
+
         let updated = false;
 
         // 1. Sync & Update Dishes & Prices over the air
@@ -4422,7 +4455,7 @@ function renderAuditLogs() {
         }
       } catch (err) {
         if (isManual) {
-          showToast('تم فحص السحابة: متصل بالخادم وتعمل المنظومة بأعلى كفاءة ✓');
+          showToast('تعذر الوصول للخادم السحابي الآن - المنظومة تعمل محلياً بكامل كفاءتها ⚡', '⚠️');
         }
       }
     }
